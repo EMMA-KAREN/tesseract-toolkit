@@ -38,22 +38,7 @@ Google Lens and similar apps use OCR techniques to extract text from photos in r
   - Option 2: Use **Node.js** with `npm install tesseract.js`.  
 
 ---
-## ✨ Features  
-- 📂 Upload an image file (JPG/PNG).  
-- 🔍 Extracts text using **Tesseract.js**.  
-- ⏳ Shows live OCR progress in the console.  
-- ⚡ Optimized with **automatic image resizing** (faster on large images).  
-- 🧹 Cleaned output (removes extra symbols & whitespace).  
-- 🌍 Supports multiple languages (default: English + French).  
 
-
-## 📂 Project Structure  
-tesseract-toolkit/
-├── index.html # Webpage with file input
-├── script.js # OCR logic with preprocessing & cleanup
-├── README.md # Project documentation
-├── demo.png # Screenshot of the demo (add this file)
-└── demo.gif # Animated demo (optional)
 ## 4. Installation & Setup Instructions  
 
 ### Option 1: Quick Setup via CDN  
@@ -88,9 +73,58 @@ Bash
 
 import Tesseract from 'tesseract.js';
 
+## 5. Minimal Working Example
+index.html
+HTML
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tesseract.js OCR Demo</title>
+</head>
+<body>
+  <h1>🖼️ OCR with Tesseract.js</h1>
+  <input type="file" id="imageInput">
+  <p><strong>Extracted Text:</strong></p>
+  <div id="output"></div>
 
-### IPrompt Journal
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+### script.js (with image resizing + cleanup)
+   JavaScript
+
+            const input = document.getElementById('imageInput');
+            const output = document.getElementById('output');
+
+            input.addEventListener('change', async () => {
+            const file = input.files[0];
+            if (file) {
+                output.innerHTML = "⏳ Processing...";
+                const resizedBlob = await resizeImage(file);
+
+                Tesseract.recognize(resizedBlob, 'eng+fra', {
+                logger: info => console.log(info)
+                }).then(({ data: { text } }) => {
+                const cleaned = text
+                    .replace(/[^a-zA-Z0-9\s.,!?]/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                output.innerText = cleaned || "⚠️ No readable text found.";
+                });
+            }
+            });
+
+   ***xpected Output:
+
+Upload an image with text (e.g., a payment receipt).
+
+Extracted text is displayed neatly under “Extracted Text.”
+
+### I Prompt Journal
 #### Prompt 1: "Show me how to set up a simple Tesseract.js project that reads text from an uploaded image."
 AI Response Summary: Provided base index.html and script.js code with event listeners.
 Evaluation: This was the crucial first step. The provided code worked on the first try, giving me a solid foundation.
@@ -107,51 +141,15 @@ Evaluation: This was a major performance improvement. Running OCR on large image
 AI Response Summary: Advised using regular expressions (regex) to remove unwanted characters and extra spaces.
 Evaluation: This tip made the final output much more readable and professional, transforming raw OCR data into a clean text block.
 
-
-## Demo Preview
-
-📸 Screenshot Example: picture  saved in the folder 
-![alt text](test.png)
-
-output :
-
-
-
-
-
-###  How It Works
-
-     1   Upload Image → User selects an image file.
-
-     2   Resize (if needed) → Large images are scaled down for speed.
-
-     3  OCR with Tesseract.js → Text is extracted in English + French.
-
-     4  Cleanup → Regex removes unwanted characters & fixes spacing.
-
-      5  Display → Final text is shown in the browser.
-
-### Deliverables
-
-    Working OCR demo (index.html + script.js).
-
-    Documentation (README.md).
-
-    AI Prompt Journal (toolkit document).
-
-    Hosted on GitHub Pages.
-
-🔗 Live Demo Again: https://EMMA-KAREN.github.io/tesseract-toolkit/    
-
 ## 7. Common Issues & Fixes
+      Issue	                               How I fixed it
+***1. OCR output full of weird characters----I used the AI's suggestion to add a regex cleanup function to the script, filtering out non-alphanumeric symbols.
 
-| Issue                            | Fix                                                     |
-| -------------------------------- | ------------------------------------------------------- |
-| OCR is slow on large images      | Toolkit automatically resizes images before processing. |
-| Output full of symbols           | Regex cleanup removes strange characters.               |
-| No text extracted                | Ensure uploaded image has clear, printed text.          |
-| Console shows only progress logs | This is normal, progress % is logged while OCR runs.    |
+***2. Very slow on big images--------I implemented the image resizing step before running the OCR to reduce the processing time.
 
+***3. No text extracted	------I learned from testing that the OCR works best on clear, printed text. For my toolkit, I noted that blurry or handwritten text might not be recognized.
+
+***4."Script not found" error----I ensured the <script> tag for tesseract.min.js was placed before the <script> tag for script.js in the HTML file.
 
 ## 8. References
 Tesseract.js Docs: https://tesseract.projectnaptha.com/
