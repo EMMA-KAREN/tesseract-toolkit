@@ -141,7 +141,7 @@ i s S Categories Free Printable Payment Receipt Templates Wordd, Excel, PPDF Sel
 
     Hosted on GitHub Pages.
 
-🔗 Live Demo Again: https://EMMA-KAREN.github.io/tesseract-toolkit/    
+🔗 Live Demo Again: https://emma-karen.github.io/tesseract-toolkit/    
 
 ## 7. Common Issues & Fixes
 
