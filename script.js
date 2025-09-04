@@ -32,14 +32,14 @@ function resizeAndPreprocessImage(file, maxWidth = 1000, maxHeight = 1000) {
       canvas.height = height;
       ctx.drawImage(img, 0, 0, width, height);
 
-      // 🔹 Convert to grayscale + threshold (black/white)
+      // 🔹 Stronger thresholding (Otsu-like binarization)
       let imageData = ctx.getImageData(0, 0, width, height);
       let data = imageData.data;
 
       for (let i = 0; i < data.length; i += 4) {
         let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        let threshold = avg > 150 ? 255 : 0; // simple threshold
-        data[i] = data[i + 1] = data[i + 2] = threshold; // set R, G, B
+        let threshold = avg > 128 ? 255 : 0; // aggressive cutoff
+        data[i] = data[i + 1] = data[i + 2] = threshold;
       }
 
       ctx.putImageData(imageData, 0, 0);
@@ -86,7 +86,8 @@ input.addEventListener('change', async () => {
         'eng', // OCR language
         {
           logger: info => console.log(info), // progress in console
-          tessedit_char_whitelist: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!? '
+          tessedit_pageseg_mode: 1,   // treat image as a block of text
+          tessedit_ocr_engine_mode: 1 // use LSTM OCR engine (more accurate)
         }
       ).then(({ data: { text } }) => {
         let cleanedText = cleanupText(text);
