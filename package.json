@@ -1,0 +1,15 @@
+{
+  "name": "tesseract-toolkit",
+  "version": "1.0.0",
+  "description": "## Overview   This project demonstrates how to use **Tesseract.js**, a JavaScript library for Optical Character Recognition (OCR).   Users can upload an image, and the app extracts and displays any text found inside.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tesseract.js": "^6.0.1"
+  }
+}
